@@ -18,3 +18,8 @@ crabs %>%
 
 # part 2: changing fuel burning rates (need diff way to optimize...need factorial??)
 # As it turns out, crab submarine engines don't burn fuel at a constant rate. Instead, each change of 1 step in horizontal position costs 1 more unit of fuel than the last: the first step costs 1, the second step costs 2, the third step costs 3, and so on.
+crabs %>%
+  mutate(dist=abs(crab_pos - 1.5),# 501 still too high @ 99,842,044 :/ . 1.5 too high also
+         dist_val = abs(dist*(dist+1)/2)) %>%
+  summarise(tot = sum(dist_val))
+  head
