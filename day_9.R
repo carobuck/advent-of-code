@@ -83,3 +83,38 @@ compare_df %>%
 # part two: flag things that are 9's, then count how many things are in a group 
 # things count as part of a group if they touch others in the groups and are bounded by 9's
 
+# maybe flag if neighbors aren't 9's?? the way I did before? or convert 9's to NAs, so when do math, get NA for L/r/u/d neighbor (thus know group ends)
+# not totally sure how to do the rest programmatically... will need to ponder. 
+devtools::install_github("briatte/ggnet")
+library(ggnet)
+library(network)
+library(sna)
+library(ggplot2)
+
+bip = data.frame(event1 = c(1, 2, 1, 0),
+                 event2 = c(0, 0, 3, 0),
+                 event3 = c(1, 1, 0, 4),
+                 row.names = letters[1:4])
+
+# weighted bipartite network
+bip = network(bip,
+              matrix.type = "bipartite",
+              ignore.eval = FALSE,
+              names.eval = "weights")
+bip
+ggnet2(bip)
+
+day9_plain %>%
+  select(1:10) %>%
+  slice(1:10) -> test
+
+ggnet2(network(test))
+
+# Hmm. I'm not finding a way to easily convert this df into a graph.... so i think I need to get creative/reshape it on my own w/ some copy/paste??
+# I'm really not sure if that's the best way (using a network graph) or if it makes more sense to try to mark 9's as NA and then count u/d/l/r 
+# https://www.data-imaginist.com/2017/introducing-tidygraph/
+install.packages("tidygraph")
+library(tidygraph)
+stuff <- as_tbl_graph(test)
+stuff %>%
+  activate(edges)
